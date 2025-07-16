@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+</script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -670,7 +687,7 @@
                             </div>
                             
                             <div class="mt-4">
-                                <input type="file" id="dessert-image-upload" class="form-control" accept="image/*" onchange="handleImageUpload(event)">
+                              <input type="text" id="dessert-image-url" class="form-control" placeholder="Paste image URL (from Imgur, etc)">
                             </div>
                             
                             <input type="hidden" id="dessert-image-data">
@@ -782,10 +799,7 @@
         
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            loadDessertsFromStorage();
-            updateDessertList();
-            renderDesserts();
-            
+               loadDessertsFromFirebase();
             // Add event listener for keep image checkbox
             document.getElementById('keep-existing-image').addEventListener('change', function() {
                 const imageUpload = document.getElementById('dessert-image-upload');
@@ -799,28 +813,15 @@
         });
         
         // Local Storage Functions
-        function saveDessertsToStorage() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(desserts));
-                return true;
-            } catch (error) {
-                console.error('Error saving to local storage:', error);
-                return false;
-            }
-        }
-        
-        function loadDessertsFromStorage() {
-            try {
-                const storedData = localStorage.getItem(STORAGE_KEY);
-                if (storedData) {
-                    desserts = JSON.parse(storedData);
-                }
-            } catch (error) {
-                console.error('Error loading from local storage:', error);
-                showToast('Could not load saved desserts', 'error');
-            }
-        }
-        
+       function loadDessertsFromFirebase() {
+    database.ref('desserts').on('value', (snapshot) => {
+        const data = snapshot.val();
+        desserts = data ? Object.values(data) : [];
+        updateDessertList();
+        renderDesserts();
+    });
+}
+
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
@@ -943,95 +944,39 @@
         }
         
         function saveDessert() {
-            // Get form values
-            const name = document.getElementById('dessert-name').value;
-            const category = document.getElementById('dessert-category').value;
-            const description = document.getElementById('dessert-description').value;
-            const imageData = document.getElementById('dessert-image-data').value;
-            const editingIndex = parseInt(document.getElementById('editing-dessert-index').value);
-            
-            // Get selected allergens
-            const selectedAllergens = [];
-            document.querySelectorAll('.allergen-tag.selected').forEach(tag => {
-                selectedAllergens.push(tag.dataset.allergen);
-            });
-            
-            // Validate form
-            if (!name || !description) {
-                showToast('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            // Check if we're editing or adding new
-            if (editingIndex >= 0) {
-                // We're editing an existing dessert
-                const keepExistingImage = document.getElementById('keep-existing-image').checked;
-                
-                // If keeping existing image and no new image uploaded
-                if (keepExistingImage) {
-                    // Update the dessert but keep the existing image
-                    desserts[editingIndex].name = name;
-                    desserts[editingIndex].category = category;
-                    desserts[editingIndex].description = description;
-                    desserts[editingIndex].allergens = selectedAllergens;
-                } else {
-                    // Require a new image if not keeping the existing one
-                    if (!imageData) {
-                        showToast('Please upload an image', 'error');
-                        return;
-                    }
-                    
-                    // Update the dessert including the new image
-                    desserts[editingIndex].name = name;
-                    desserts[editingIndex].category = category;
-                    desserts[editingIndex].description = description;
-                    desserts[editingIndex].allergens = selectedAllergens;
-                    desserts[editingIndex].image = imageData;
-                }
-                
-                // Save to local storage
-                if (saveDessertsToStorage()) {
-                    showToast('Dessert updated successfully!');
-                } else {
-                    showToast('Could not save changes. Storage might be full.', 'error');
-                }
-            } else {
-                // We're adding a new dessert
-                if (!imageData) {
-                    showToast('Please upload an image', 'error');
-                    return;
-                }
-                
-                // Create a new dessert object
-                const newDessert = {
-                    name,
-                    category,
-                    description,
-                    allergens: selectedAllergens,
-                    image: imageData
-                };
-                
-                // Add to our desserts array
-                desserts.push(newDessert);
-                
-                // Save to local storage
-                if (saveDessertsToStorage()) {
-                    showToast('Dessert saved successfully!');
-                } else {
-                    showToast('Could not save dessert. Storage might be full.', 'error');
-                    // Remove the dessert if we couldn't save it
-                    desserts.pop();
-                }
-            }
-            
-            // Update the UI
-            updateDessertList();
-            renderDesserts();
-            
-            // Hide the form
+    const name = document.getElementById('dessert-name').value;
+    const category = document.getElementById('dessert-category').value;
+    const description = document.getElementById('dessert-description').value;
+    const imageUrl = document.getElementById('dessert-image-url').value;
+
+    const selectedAllergens = [];
+    document.querySelectorAll('.allergen-tag.selected').forEach(tag => {
+        selectedAllergens.push(tag.dataset.allergen);
+    });
+
+    if (!name || !description || !imageUrl) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+
+    const dessert = {
+        name,
+        category,
+        description,
+        image: imageUrl,
+        allergens: selectedAllergens
+    };
+
+    const newDessertRef = database.ref('desserts').push();
+    newDessertRef.set(dessert, function(error) {
+        if (error) {
+            showToast('Error saving dessert', 'error');
+        } else {
+            showToast('Dessert saved!');
             cancelDessertForm();
         }
-        
+    });
+} 
         function editDessert(index) {
             const dessert = desserts[index];
             
