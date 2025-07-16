@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #f5f0e8;
+            color: #3c2f2f;
+        }
+        
+        .menu-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff9f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e8d6c0;
+        }
+        
+        .food-item {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .food-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        #welcome-section {
+            display: block;
+        }
+        
+        .category-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #e8d6c0;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 50;
+        }
+        
+        .ornament {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        .contact-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+        }
+        
+        .admin-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 50;
+        }
+        
+        .dessert-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Admin section styles */
+        .admin-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .admin-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .admin-card-header {
+            background-color: #8b5e34;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .admin-card-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #5c4033;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #d4a373;
+            border-radius: 4px;
+            background-color: #fefae0;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #8b5e34;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 94, 52, 0.2);
+        }
+        
+        .btn-admin {
+            background-color: #8b5e34;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-admin:hover {
+            background-color: #6b4423;
+        }
+        
+        .dessert-preview {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e8d6c0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #fefae0;
+        }
+        
+        .dessert-preview-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .dessert-preview-info {
+            flex: 1;
+        }
+        
+        .dessert-preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .btn-edit {
+            background-color: #4d7c0f;
+        }
+        
+        .btn-edit:hover {
+            background-color: #3f6212;
+        }
+        
+        .admin-login {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #d4a373;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .image-preview-placeholder {
+            color: #d4a373;
+            text-align: center;
+        }
+        
+        .allergen-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .allergen-tag {
+            display: flex;
+            align-items: center;
+            background-color: #f8f5f0;
+            border: 1px solid #d4a373;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .allergen-tag.selected {
+            background-color: #d4a373;
+            color: white;
+        }
+        
+        .allergen-tag i {
+            margin-right: 5px;
+        }
+        
+        .allergen-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #f59e0b;
+            color: white;
+            font-size: 12px;
+            margin-right: 6px;
+        }
+        
+        .modal-allergens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .modal-allergen {
+            display: flex;
+            align-items: center;
+            background-color: #fef3c7;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 14px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8b5e34;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+        
+        .keep-image-checkbox {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .keep-image-checkbox input {
+            margin-right: 8px;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .toast.success {
+            background-color: #10b981;
+        }
+        
+        .toast.error {
+            background-color: #ef4444;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .storage-info {
+            text-align: center;
+            padding: 10px;
+            background-color: #fef3c7;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container p-8 my-10 rounded-lg min-h-[80vh]">
+        <!-- Welcome Section -->
+        <section id="welcome-section" class="section">
+            <header class="text-center mb-16">
+                <h1 class="text-5xl font-bold text-amber-900 mb-4">Dessert Menu</h1>
+                <p class="text-xl text-amber-800 italic">Please select a category</p>
+                <div class="flex justify-center items-center my-6">
+                    <div class="border-t border-amber-800 w-16"></div>
+                    <span class="ornament text-amber-800 mx-4">✦</span>
+                    <div class="border-t border-amber-800 w-16"></div>
+                </div>
+            </header>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-3xl mx-auto">
+                <div class="category-card bg-amber-50 rounded-lg p-8 text-center shadow-sm" onclick="showSection('arabic-section')">
+                    <div class="mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none" class="mx-auto">
+                            <path d="M40 10C22.3 10 8 24.3 8 42C8 59.7 22.3 74 40 74C57.7 74 72 59.7 72 42C72 24.3 57.7 10 40 10Z" fill="#F8E3C5"/>
+                            <path d="M40 16C25.6 16 14 27.6 14 42C14 56.4 25.6 68 40 68C54.4 68 66 56.4 66 42C66 27.6 54.4 16 40 16Z" fill="#E6B17E"/>
+                            <path d="M40 22C28.9 22 20 30.9 20 42C20 53.1 28.9 62 40 62C51.1 62 60 53.1 60 42C60 30.9 51.1 22 40 22Z" fill="#D4A373"/>
+                            <path d="M32 34C32 32.9 32.9 32 34 32H46C47.1 32 48 32.9 48 34V38C48 39.1 47.1 40 46 40H34C32.9 40 32 39.1 32 38V34Z" fill="#F8E3C5"/>
+                            <path d="M28 44C28 42.9 28.9 42 30 42H50C51.1 42 52 42.9 52 44V48C52 49.1 51.1 50 50 50H30C28.9 50 28 49.1 28 48V44Z" fill="#F8E3C5"/>
+                            <path d="M36 32H44V40H36V32Z" fill="#8B5E34"/>
+                            <path d="M32 42H48V50H32V42Z" fill="#8B5E34"/>
+                            <path d="M40 28C39.4 28 39 28.4 39 29V32H41V29C41 28.4 40.6 28 40 28Z" fill="#8B5E34"/>
+                            <path d="M40 50C39.4 50 39 50.4 39 51V54C39 54.6 39.4 55 40 55C40.6 55 41 54.6 41 54V51C41 50.4 40.6 50 40 50Z" fill="#8B5E34"/>
+                            <path d="M28 42C27.4 42 27 42.4 27 43V47C27 47.6 27.4 48 28 48C28.6 48 29 47.6 29 47V43C29 42.4 28.6 42 28 42Z" fill="#8B5E34"/>
+                            <path d="M52 42C51.4 42 51 42.4 51 43V47C51 47.6 51.4 48 52 48C52.6 48 53 47.6 53 47V43C53 42.4 52.6 42 52 42Z" fill="#8B5E34"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-amber-900 mb-2">Arabic Desserts</h2>
+                    <p class="text-amber-800">Traditional delicacies from the Middle East</p>
+                </div>
+                
+                <div class="category-card bg-amber-50 rounded-lg p-8 text-center shadow-sm" onclick="showSection('western-section')">
+                    <div class="mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none" class="mx-auto">
+                            <path d="M55 25H25C21.7 25 19 27.7 19 31V49C19 52.3 21.7 55 25 55H55C58.3 55 61 52.3 61 49V31C61 27.7 58.3 25 55 25Z" fill="#F8E3C5"/>
+                            <path d="M55 30H25C24.4 30 24 30.4 24 31V49C24 49.6 24.4 50 25 50H55C55.6 50 56 49.6 56 49V31C56 30.4 55.6 30 55 30Z" fill="#D4A373"/>
+                            <path d="M40 15C36.7 15 34 17.7 34 21V25H46V21C46 17.7 43.3 15 40 15Z" fill="#E6B17E"/>
+                            <path d="M40 20C38.9 20 38 20.9 38 22V25H42V22C42 20.9 41.1 20 40 20Z" fill="#8B5E34"/>
+                            <circle cx="30" cy="40" r="5" fill="#F8E3C5"/>
+                            <circle cx="40" cy="40" r="5" fill="#F8E3C5"/>
+                            <circle cx="50" cy="40" r="5" fill="#F8E3C5"/>
+                            <path d="M30 37C28.9 37 28 37.9 28 39V41C28 42.1 28.9 43 30 43C31.1 43 32 42.1 32 41V39C32 37.9 31.1 37 30 37Z" fill="#E6B17E"/>
+                            <path d="M40 37C38.9 37 38 37.9 38 39V41C38 42.1 38.9 43 40 43C41.1 43 42 42.1 42 41V39C42 37.9 41.1 37 40 37Z" fill="#E6B17E"/>
+                            <path d="M50 37C48.9 37 48 37.9 48 39V41C48 42.1 48.9 43 50 43C51.1 43 52 42.1 52 41V39C52 37.9 51.1 37 50 37Z" fill="#E6B17E"/>
+                            <path d="M19 55H61V60C61 62.2 59.2 64 57 64H23C20.8 64 19 62.2 19 60V55Z" fill="#8B5E34"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-amber-900 mb-2">Western Desserts</h2>
+                    <p class="text-amber-800">Classic European and American sweet treats</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center">
+                <button class="bg-amber-800 text-amber-50 px-6 py-3 rounded hover:bg-amber-900 transition" onclick="showSection('contact-section')">
+                    <i class="fas fa-address-book mr-2"></i> Contact Information
+                </button>
+            </div>
+        </section>
+        
+        <!-- Arabic Desserts Section -->
+        <section id="arabic-section" class="section">
+            <button class="back-btn bg-amber-800 text-amber-50 px-4 py-2 rounded hover:bg-amber-900 transition flex items-center" onclick="showSection('welcome-section')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back
+            </button>
+            
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-amber-900 mb-2">Arabic Desserts</h1>
+                <div class="flex justify-center items-center my-4">
+                    <div class="border-t border-amber-800 w-12"></div>
+                    <span class="ornament text-amber-800 mx-3">✦</span>
+                    <div class="border-t border-amber-800 w-12"></div>
+                </div>
+            </header>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="arabic-desserts-container">
+                <!-- Desserts will be loaded here dynamically -->
+                <div class="empty-state col-span-3" id="arabic-empty-state">
+                    <i class="fas fa-cookie-bite"></i>
+                    <h3 class="text-xl font-medium mb-2">No Arabic Desserts Yet</h3>
+                    <p>The owner hasn't added any Arabic desserts to the menu yet.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Western Desserts Section -->
+        <section id="western-section" class="section">
+            <button class="back-btn bg-amber-800 text-amber-50 px-4 py-2 rounded hover:bg-amber-900 transition flex items-center" onclick="showSection('welcome-section')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back
+            </button>
+            
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-amber-900 mb-2">Western Desserts</h1>
+                <div class="flex justify-center items-center my-4">
+                    <div class="border-t border-amber-800 w-12"></div>
+                    <span class="ornament text-amber-800 mx-3">✦</span>
+                    <div class="border-t border-amber-800 w-12"></div>
+                </div>
+            </header>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="western-desserts-container">
+                <!-- Desserts will be loaded here dynamically -->
+                <div class="empty-state col-span-3" id="western-empty-state">
+                    <i class="fas fa-ice-cream"></i>
+                    <h3 class="text-xl font-medium mb-2">No Western Desserts Yet</h3>
+                    <p>The owner hasn't added any Western desserts to the menu yet.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact-section" class="section">
+            <button class="back-btn bg-amber-800 text-amber-50 px-4 py-2 rounded hover:bg-amber-900 transition flex items-center" onclick="showSection('welcome-section')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back
+            </button>
+            
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-amber-900 mb-2">Contact Information</h1>
+                <div class="flex justify-center items-center my-4">
+                    <div class="border-t border-amber-800 w-12"></div>
+                    <span class="ornament text-amber-800 mx-3">✦</span>
+                    <div class="border-t border-amber-800 w-12"></div>
+                </div>
+            </header>
+            
+            <div class="max-w-2xl mx-auto bg-amber-50 p-8 rounded-lg border border-amber-200">
+                <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-2xl font-semibold text-amber-900 mb-6">Get in Touch</h2>
+                        
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mr-4">
+                                <i class="fas fa-phone text-amber-800"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm">Phone</p>
+                                <p class="text-amber-900 font-medium">+123 456 7890</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-amber-800"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm">Email</p>
+                                <p class="text-amber-900 font-medium">info@dessertmenu.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-amber-800"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm">Address</p>
+                                <p class="text-amber-900 font-medium">123 Sweet Street, Dessert City</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t md:border-l border-amber-200 pt-8 md:pt-0 md:pl-8 text-center">
+                        <h2 class="text-2xl font-semibold text-amber-900 mb-6">Follow Us</h2>
+                        
+                        <div class="flex justify-center gap-4 mb-6">
+                            <a href="#" class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center hover:bg-amber-200 transition">
+                                <i class="fab fa-instagram text-amber-800 text-xl"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center hover:bg-amber-200 transition">
+                                <i class="fab fa-facebook-f text-amber-800 text-xl"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center hover:bg-amber-200 transition">
+                                <i class="fab fa-twitter text-amber-800 text-xl"></i>
+                            </a>
+                        </div>
+                        
+                        <p class="text-amber-900">@dessertmenu</p>
+                        <p class="text-gray-600 mt-2">Follow us for the latest dessert creations and special offers!</p>
+                    </div>
+                </div>
+                
+                <div class="mt-10 pt-8 border-t border-amber-200 text-center">
+                    <h3 class="text-xl font-medium text-amber-900 mb-4">Opening Hours</h3>
+                    <div class="grid grid-cols-2 max-w-xs mx-auto gap-2">
+                        <p class="text-amber-800">Monday - Friday:</p>
+                        <p class="text-gray-600">9:00 AM - 10:00 PM</p>
+                        <p class="text-amber-800">Saturday - Sunday:</p>
+                        <p class="text-gray-600">10:00 AM - 11:00 PM</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Admin Login Section -->
+        <section id="admin-login-section" class="section">
+            <button class="back-btn bg-amber-800 text-amber-50 px-4 py-2 rounded hover:bg-amber-900 transition flex items-center" onclick="showSection('welcome-section')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back
+            </button>
+            
+            <div class="admin-login">
+                <h2 class="text-2xl font-bold text-amber-900 mb-6 text-center">Owner Access</h2>
+                <p class="text-amber-700 mb-6 text-center">Please enter your password to access the admin area</p>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="admin-password" class="form-control" placeholder="Enter password">
+                </div>
+                
+                <div id="login-error" class="text-red-600 text-sm mb-4 hidden">
+                    Incorrect password. Please try again.
+                </div>
+                
+                <button class="btn-admin w-full" onclick="checkAdminPassword()">
+                    <i class="fas fa-lock mr-2"></i> Login
+                </button>
+            </div>
+        </section>
+        
+        <!-- Admin Dashboard Section -->
+        <section id="admin-section" class="section">
+            <button class="back-btn bg-amber-800 text-amber-50 px-4 py-2 rounded hover:bg-amber-900 transition flex items-center" onclick="showSection('welcome-section')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back to Menu
+            </button>
+            
+            <header class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-amber-900 mb-2">Owner Dashboard</h1>
+                <p class="text-amber-700">Manage your dessert information</p>
+            </header>
+            
+            <div class="admin-form-container">
+                <div class="storage-info">
+                    <i class="fas fa-database mr-2"></i>
+                    Your dessert menu is automatically saved to your browser's local storage
+                </div>
+                
+                <div class="admin-header">
+                    <h2 class="text-2xl font-semibold text-amber-900">Dessert Information</h2>
+                    <button class="btn-admin" onclick="toggleAddDessertForm()">
+                        <i class="fas fa-plus mr-2"></i> Add New Dessert
+                    </button>
+                </div>
+                
+                <!-- Add Dessert Form -->
+                <div id="add-dessert-form" class="admin-card mb-8 hidden">
+                    <div class="admin-card-header">
+                        <h3 id="form-title">Add New Dessert</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="form-group">
+                            <label for="dessert-name" class="form-label">Dessert Name</label>
+                            <input type="text" id="dessert-name" class="form-control" placeholder="Enter dessert name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dessert-category" class="form-label">Category</label>
+                            <select id="dessert-category" class="form-control">
+                                <option value="arabic">Arabic Dessert</option>
+                                <option value="western">Western Dessert</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dessert-description" class="form-label">Description</label>
+                            <textarea id="dessert-description" class="form-control" rows="3" placeholder="Describe the dessert"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Allergens</label>
+                            <div class="allergen-tags">
+                                <div class="allergen-tag" data-allergen="gluten" onclick="toggleAllergen(this)">
+                                    <i class="fas fa-bread-slice"></i> Gluten
+                                </div>
+                                <div class="allergen-tag" data-allergen="dairy" onclick="toggleAllergen(this)">
+                                    <i class="fas fa-cheese"></i> Dairy
+                                </div>
+                                <div class="allergen-tag" data-allergen="nuts" onclick="toggleAllergen(this)">
+                                    <i class="fas fa-seedling"></i> Nuts
+                                </div>
+                                <div class="allergen-tag" data-allergen="eggs" onclick="toggleAllergen(this)">
+                                    <i class="fas fa-egg"></i> Eggs
+                                </div>
+                                <div class="allergen-tag" data-allergen="soy" onclick="toggleAllergen(this)">
+                                    <i class="fas fa-leaf"></i> Soy
+                                </div>
+                                <div class="allergen-tag" data-allergen="sesame" onclick="toggleAllergen(this)">
+                                    <i class="fas fa-cookie"></i> Sesame
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Dessert Image</label>
+                            <div class="image-preview" id="image-preview">
+                                <div class="image-preview-placeholder">
+                                    <i class="fas fa-image fa-3x mb-2"></i>
+                                    <p>Upload an image from your gallery</p>
+                                </div>
+                            </div>
+                            
+                            <div id="keep-image-option" class="keep-image-checkbox hidden">
+                                <input type="checkbox" id="keep-existing-image" checked>
+                                <label for="keep-existing-image">Keep existing image</label>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <input type="file" id="dessert-image-upload" class="form-control" accept="image/*" onchange="handleImageUpload(event)">
+                            </div>
+                            
+                            <input type="hidden" id="dessert-image-data">
+                            <input type="hidden" id="editing-dessert-index" value="-1">
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4 mt-6">
+                            <button class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition" onclick="cancelDessertForm()">
+                                Cancel
+                            </button>
+                            <button id="save-dessert-btn" class="btn-admin" onclick="saveDessert()">
+                                <i class="fas fa-save mr-2"></i> Save Dessert
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dessert List -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Your Dessert Collection</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div id="dessert-list">
+                            <!-- Dessert items will be added here dynamically -->
+                            <div class="empty-state" id="admin-empty-state">
+                                <i class="fas fa-utensils"></i>
+                                <h3 class="text-xl font-medium mb-2">No Desserts Added Yet</h3>
+                                <p>Click the "Add New Dessert" button to start building your menu.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Dessert Details Modal -->
+        <div id="dessert-details-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg max-w-lg w-full mx-4">
+                <div class="flex justify-end">
+                    <button onclick="closeDessertDetails()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="text-center mb-4">
+                    <img id="detail-dessert-image" src="" alt="Dessert" class="w-full h-64 object-cover rounded-lg mx-auto mb-4">
+                    <h2 id="detail-dessert-name" class="text-2xl font-bold text-amber-900">Dessert Name</h2>
+                    <p id="detail-dessert-category" class="text-amber-700 font-medium mb-4">Category</p>
+                    <p id="detail-dessert-description" class="text-gray-700">Description</p>
+                    
+                    <div class="modal-allergens" id="detail-dessert-allergens">
+                        <!-- Allergens will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">
+            <span id="toast-message"></span>
+        </div>
+    </div>
+    
+    <!-- Contact Button -->
+    <button class="contact-btn bg-amber-800 text-amber-50 px-4 py-2 rounded-full hover:bg-amber-900 transition flex items-center shadow-lg" onclick="showSection('contact-section')">
+        <i class="fas fa-address-book mr-2"></i> Contact
+    </button>
+    
+    <!-- Admin Button -->
+    <button class="admin-btn bg-amber-800 text-amber-50 px-4 py-2 rounded-full hover:bg-amber-900 transition flex items-center shadow-lg" onclick="showSection('admin-login-section')">
+        <i class="fas fa-user-shield mr-2"></i> Owner
+    </button>
+    
+    <script>
+        // Initialize desserts array
+        let desserts = [];
+        
+        // Local storage key
+        const STORAGE_KEY = 'dessert_menu_data';
+        
+        // Allergen information
+        const allergenInfo = {
+            "gluten": {
+                icon: "fas fa-bread-slice",
+                description: "Contains gluten"
+            },
+            "dairy": {
+                icon: "fas fa-cheese",
+                description: "Contains dairy products"
+            },
+            "nuts": {
+                icon: "fas fa-seedling",
+                description: "Contains nuts"
+            },
+            "eggs": {
+                icon: "fas fa-egg",
+                description: "Contains eggs"
+            },
+            "soy": {
+                icon: "fas fa-leaf",
+                description: "Contains soy"
+            },
+            "sesame": {
+                icon: "fas fa-cookie",
+                description: "Contains sesame"
+            }
+        };
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDessertsFromStorage();
+            updateDessertList();
+            renderDesserts();
+            
+            // Add event listener for keep image checkbox
+            document.getElementById('keep-existing-image').addEventListener('change', function() {
+                const imageUpload = document.getElementById('dessert-image-upload');
+                imageUpload.disabled = this.checked;
+                if (this.checked) {
+                    imageUpload.classList.add('opacity-50');
+                } else {
+                    imageUpload.classList.remove('opacity-50');
+                }
+            });
+        });
+        
+        // Local Storage Functions
+        function saveDessertsToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(desserts));
+                return true;
+            } catch (error) {
+                console.error('Error saving to local storage:', error);
+                return false;
+            }
+        }
+        
+        function loadDessertsFromStorage() {
+            try {
+                const storedData = localStorage.getItem(STORAGE_KEY);
+                if (storedData) {
+                    desserts = JSON.parse(storedData);
+                }
+            } catch (error) {
+                console.error('Error loading from local storage:', error);
+                showToast('Could not load saved desserts', 'error');
+            }
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            // Set message and type
+            toastMessage.textContent = message;
+            toast.className = `toast ${type}`;
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show the selected section
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Admin functionality
+        function checkAdminPassword() {
+            const password = document.getElementById('admin-password').value;
+            const errorElement = document.getElementById('login-error');
+            
+            // Simple password check (in a real app, this would be server-side)
+            if (password === "owner123") {
+                showSection('admin-section');
+                document.getElementById('admin-password').value = '';
+                errorElement.classList.add('hidden');
+            } else {
+                errorElement.classList.remove('hidden');
+            }
+        }
+        
+        function toggleAddDessertForm() {
+            const form = document.getElementById('add-dessert-form');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                resetDessertForm();
+                document.getElementById('form-title').textContent = 'Add New Dessert';
+                document.getElementById('save-dessert-btn').innerHTML = '<i class="fas fa-save mr-2"></i> Save Dessert';
+                document.getElementById('editing-dessert-index').value = -1;
+                document.getElementById('keep-image-option').classList.add('hidden');
+            } else {
+                form.classList.add('hidden');
+            }
+        }
+        
+        function cancelDessertForm() {
+            document.getElementById('add-dessert-form').classList.add('hidden');
+        }
+        
+        function resetDessertForm() {
+            // Reset form fields
+            document.getElementById('dessert-name').value = '';
+            document.getElementById('dessert-description').value = '';
+            document.getElementById('dessert-image-data').value = '';
+            document.getElementById('dessert-category').value = 'arabic';
+            
+            // Reset allergen tags
+            document.querySelectorAll('.allergen-tag').forEach(tag => {
+                tag.classList.remove('selected');
+            });
+            
+            // Reset image preview
+            const imagePreview = document.getElementById('image-preview');
+            imagePreview.innerHTML = `
+                <div class="image-preview-placeholder">
+                    <i class="fas fa-image fa-3x mb-2"></i>
+                    <p>Upload an image from your gallery</p>
+                </div>
+            `;
+            
+            // Reset file input
+            const fileInput = document.getElementById('dessert-image-upload');
+            fileInput.value = '';
+            fileInput.disabled = false;
+            fileInput.classList.remove('opacity-50');
+        }
+        
+        function toggleAllergen(element) {
+            element.classList.toggle('selected');
+        }
+        
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Update the preview
+                    const imagePreview = document.getElementById('image-preview');
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Uploaded Image" style="max-height: 100%; max-width: 100%;">`;
+                    
+                    // Store the image data
+                    document.getElementById('dessert-image-data').value = e.target.result;
+                    
+                    // If editing, uncheck the keep existing image checkbox
+                    if (document.getElementById('editing-dessert-index').value !== '-1') {
+                        document.getElementById('keep-existing-image').checked = false;
+                    }
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function saveDessert() {
+            // Get form values
+            const name = document.getElementById('dessert-name').value;
+            const category = document.getElementById('dessert-category').value;
+            const description = document.getElementById('dessert-description').value;
+            const imageData = document.getElementById('dessert-image-data').value;
+            const editingIndex = parseInt(document.getElementById('editing-dessert-index').value);
+            
+            // Get selected allergens
+            const selectedAllergens = [];
+            document.querySelectorAll('.allergen-tag.selected').forEach(tag => {
+                selectedAllergens.push(tag.dataset.allergen);
+            });
+            
+            // Validate form
+            if (!name || !description) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Check if we're editing or adding new
+            if (editingIndex >= 0) {
+                // We're editing an existing dessert
+                const keepExistingImage = document.getElementById('keep-existing-image').checked;
+                
+                // If keeping existing image and no new image uploaded
+                if (keepExistingImage) {
+                    // Update the dessert but keep the existing image
+                    desserts[editingIndex].name = name;
+                    desserts[editingIndex].category = category;
+                    desserts[editingIndex].description = description;
+                    desserts[editingIndex].allergens = selectedAllergens;
+                } else {
+                    // Require a new image if not keeping the existing one
+                    if (!imageData) {
+                        showToast('Please upload an image', 'error');
+                        return;
+                    }
+                    
+                    // Update the dessert including the new image
+                    desserts[editingIndex].name = name;
+                    desserts[editingIndex].category = category;
+                    desserts[editingIndex].description = description;
+                    desserts[editingIndex].allergens = selectedAllergens;
+                    desserts[editingIndex].image = imageData;
+                }
+                
+                // Save to local storage
+                if (saveDessertsToStorage()) {
+                    showToast('Dessert updated successfully!');
+                } else {
+                    showToast('Could not save changes. Storage might be full.', 'error');
+                }
+            } else {
+                // We're adding a new dessert
+                if (!imageData) {
+                    showToast('Please upload an image', 'error');
+                    return;
+                }
+                
+                // Create a new dessert object
+                const newDessert = {
+                    name,
+                    category,
+                    description,
+                    allergens: selectedAllergens,
+                    image: imageData
+                };
+                
+                // Add to our desserts array
+                desserts.push(newDessert);
+                
+                // Save to local storage
+                if (saveDessertsToStorage()) {
+                    showToast('Dessert saved successfully!');
+                } else {
+                    showToast('Could not save dessert. Storage might be full.', 'error');
+                    // Remove the dessert if we couldn't save it
+                    desserts.pop();
+                }
+            }
+            
+            // Update the UI
+            updateDessertList();
+            renderDesserts();
+            
+            // Hide the form
+            cancelDessertForm();
+        }
+        
+        function editDessert(index) {
+            const dessert = desserts[index];
+            
+            // Set form title
+            document.getElementById('form-title').textContent = 'Edit Dessert';
+            document.getElementById('save-dessert-btn').innerHTML = '<i class="fas fa-save mr-2"></i> Update Dessert';
+            
+            // Fill form with dessert data
+            document.getElementById('dessert-name').value = dessert.name;
+            document.getElementById('dessert-category').value = dessert.category;
+            document.getElementById('dessert-description').value = dessert.description;
+            document.getElementById('editing-dessert-index').value = index;
+            
+            // Show the keep image option
+            document.getElementById('keep-image-option').classList.remove('hidden');
+            document.getElementById('keep-existing-image').checked = true;
+            
+            // Disable the file input initially since we're keeping the existing image
+            const fileInput = document.getElementById('dessert-image-upload');
+            fileInput.disabled = true;
+            fileInput.classList.add('opacity-50');
+            
+            // Set allergens
+            document.querySelectorAll('.allergen-tag').forEach(tag => {
+                if (dessert.allergens.includes(tag.dataset.allergen)) {
+                    tag.classList.add('selected');
+                } else {
+                    tag.classList.remove('selected');
+                }
+            });
+            
+            // Set image preview
+            const imagePreview = document.getElementById('image-preview');
+            imagePreview.innerHTML = `<img src="${dessert.image}" alt="${dessert.name}" style="max-height: 100%; max-width: 100%;">`;
+            
+            // Show the form
+            document.getElementById('add-dessert-form').classList.remove('hidden');
+        }
+        
+        function updateDessertList() {
+            const dessertList = document.getElementById('dessert-list');
+            const adminEmptyState = document.getElementById('admin-empty-state');
+            
+            // Clear the list
+            dessertList.innerHTML = '';
+            
+            // Show empty state if no desserts
+            if (desserts.length === 0) {
+                dessertList.appendChild(adminEmptyState);
+                return;
+            }
+            
+            // Add each dessert to the list
+            desserts.forEach((dessert, index) => {
+                const dessertElement = document.createElement('div');
+                dessertElement.className = 'dessert-preview';
+                
+                const categoryText = dessert.category === 'arabic' ? 'Arabic Dessert' : 'Western Dessert';
+                
+                // Create allergen badges
+                let allergenBadges = '';
+                if (dessert.allergens && dessert.allergens.length > 0) {
+                    allergenBadges = '<div class="flex flex-wrap gap-1 mt-1">';
+                    dessert.allergens.forEach(allergen => {
+                        if (allergenInfo[allergen]) {
+                            allergenBadges += `
+                                <span class="inline-flex items-center bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
+                                    <i class="${allergenInfo[allergen].icon} mr-1"></i> ${allergen}
+                                </span>
+                            `;
+                        }
+                    });
+                    allergenBadges += '</div>';
+                }
+                
+                dessertElement.innerHTML = `
+                    <img src="${dessert.image}" alt="${dessert.name}" class="dessert-preview-img">
+                    <div class="dessert-preview-info">
+                        <h4 class="font-medium text-amber-900">${dessert.name}</h4>
+                        <p class="text-sm text-amber-700">${categoryText}</p>
+                        ${allergenBadges}
+                    </div>
+                    <div class="dessert-preview-actions">
+                        <button class="btn-admin btn-sm btn-edit" onclick="editDessert(${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-admin btn-sm" onclick="viewDessertDetails(${index})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                `;
+                
+                dessertList.appendChild(dessertElement);
+            });
+        }
+        
+        function renderDesserts() {
+            const arabicContainer = document.getElementById('arabic-desserts-container');
+            const westernContainer = document.getElementById('western-desserts-container');
+            const arabicEmptyState = document.getElementById('arabic-empty-state');
+            const westernEmptyState = document.getElementById('western-empty-state');
+            
+            // Clear containers
+            arabicContainer.innerHTML = '';
+            westernContainer.innerHTML = '';
+            
+            // Filter desserts by category
+            const arabicDesserts = desserts.filter(d => d.category === 'arabic');
+            const westernDesserts = desserts.filter(d => d.category === 'western');
+            
+            // Show empty states if no desserts
+            if (arabicDesserts.length === 0) {
+                arabicContainer.appendChild(arabicEmptyState);
+            }
+            
+            if (westernDesserts.length === 0) {
+                westernContainer.appendChild(westernEmptyState);
+            }
+            
+            // Render desserts by category
+            desserts.forEach((dessert, index) => {
+                const dessertElement = document.createElement('div');
+                dessertElement.className = 'food-item flex flex-col items-center';
+                
+                // Create allergen badges
+                let allergenBadges = '';
+                if (dessert.allergens && dessert.allergens.length > 0) {
+                    allergenBadges = '<div class="flex flex-wrap justify-center gap-1 mt-2">';
+                    dessert.allergens.forEach(allergen => {
+                        if (allergenInfo[allergen]) {
+                            allergenBadges += `
+                                <span class="inline-flex items-center bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
+                                    <i class="${allergenInfo[allergen].icon} mr-1"></i>
+                                </span>
+                            `;
+                        }
+                    });
+                    allergenBadges += '</div>';
+                }
+                
+                // Get first sentence of description
+                const firstSentence = dessert.description.split('.')[0] + '.';
+                
+                dessertElement.innerHTML = `
+                    <img src="${dessert.image}" alt="${dessert.name}" class="dessert-img mb-4">
+                    <h3 class="text-xl font-medium text-amber-900">${dessert.name}</h3>
+                    <p class="text-amber-700 text-center">${firstSentence}</p>
+                    ${allergenBadges}
+                `;
+                
+                // Add click event to show details
+                dessertElement.addEventListener('click', function() {
+                    viewDessertDetails(index);
+                });
+                
+                // Add to appropriate container
+                if (dessert.category === 'arabic') {
+                    arabicContainer.appendChild(dessertElement);
+                } else {
+                    westernContainer.appendChild(dessertElement);
+                }
+            });
+        }
+        
+        function viewDessertDetails(index) {
+            const dessert = desserts[index];
+            const modal = document.getElementById('dessert-details-modal');
+            
+            // Fill in the details
+            document.getElementById('detail-dessert-name').textContent = dessert.name;
+            document.getElementById('detail-dessert-category').textContent = 
+                dessert.category === 'arabic' ? 'Arabic Dessert' : 'Western Dessert';
+            document.getElementById('detail-dessert-description').textContent = dessert.description;
+            document.getElementById('detail-dessert-image').src = dessert.image;
+            
+            // Add allergen information
+            const allergensContainer = document.getElementById('detail-dessert-allergens');
+            allergensContainer.innerHTML = '';
+            
+            if (dessert.allergens && dessert.allergens.length > 0) {
+                dessert.allergens.forEach(allergen => {
+                    if (allergenInfo[allergen]) {
+                        const allergenElement = document.createElement('div');
+                        allergenElement.className = 'modal-allergen';
+                        allergenElement.innerHTML = `
+                            <span class="allergen-icon">
+                                <i class="${allergenInfo[allergen].icon}"></i>
+                            </span>
+                            ${allergenInfo[allergen].description}
+                        `;
+                        allergensContainer.appendChild(allergenElement);
+                    }
+                });
+            } else {
+                allergensContainer.innerHTML = '<p class="text-green-600 mt-2">No allergens</p>';
+            }
+            
+            // Show the modal
+            modal.classList.remove('hidden');
+        }
+        
+        function closeDessertDetails() {
+            document.getElementById('dessert-details-modal').classList.add('hidden');
+        }
+        
+        // Close modal when pressing escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeDessertDetails();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9601529946440e3c',t:'MTc1MjY2NzA1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
