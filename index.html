@@ -703,30 +703,54 @@ const firebaseConfig = {
                             </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label class="form-label">Dessert Image</label>
-                            <div class="image-preview" id="image-preview">
-                                <div class="image-preview-placeholder">
-                                    <i class="fas fa-image fa-3x mb-2"></i>
-                                    <p>Upload an image from your gallery</p>
-                                </div>
-                            </div>
-                            
-                            <div id="keep-image-option" class="keep-image-checkbox hidden">
-                                <input type="checkbox" id="keep-existing-image" checked>
-                                <label for="keep-existing-image">Keep existing image</label>
-                            </div>
-                            
-                            <div class="mt-4">
-                              <input type="file" id="dessert-image-file" class="form-control" accept="image/*">
-<button type="button" onclick="uploadImageOnly()" class="btn btn-primary mt-2">Upload Image</button>
-<input type="text" id="dessert-image-url" class="form-control mt-2" placeholder="Image URL (auto-filled after upload)" readonly>
+                       <div class="form-group">
+  <label class="form-label">Dessert Image</label>
 
-                            </div>
-                            
-                            <input type="hidden" id="dessert-image-data">
-                            <input type="hidden" id="editing-dessert-index" value="-1">
-                        </div>
+  <!-- Image Preview Area -->
+  <div class="image-preview" id="image-preview">
+    <div class="image-preview-placeholder">
+      <i class="fas fa-image fa-3x mb-2"></i>
+      <p>Upload an image from your gallery</p>
+    </div>
+  </div>
+
+  <!-- Keep existing image checkbox (for editing) -->
+  <div id="keep-image-option" class="keep-image-checkbox hidden">
+    <input type="checkbox" id="keep-existing-image" checked>
+    <label for="keep-existing-image">Keep existing image</label>
+  </div>
+
+  <!-- Input for image URL (optional/paste only) -->
+  <input type="text" id="dessert-image-url" class="form-control mt-2" placeholder="Image URL (optional)" readonly>
+
+  <!-- ADDED: File input for uploading from device -->
+  <input type="file" id="dessert-image-upload" accept="image/*" class="form-control mt-2">
+  
+  <input type="hidden" id="dessert-image-data">
+  <input type="hidden" id="editing-dessert-index" value="-1">
+</div>
+
+<script>
+  document.getElementById('dessert-image-upload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageUrl = e.target.result;
+        document.getElementById('dessert-image-url').value = imageUrl;
+        document.getElementById('dessert-image-data').value = imageUrl;
+        document.getElementById('image-preview').innerHTML = `<img src="${imageUrl}" alt="Dessert Image" style="max-width: 100%;">`;
+
+        // If editing, uncheck 'keep existing image'
+        if (document.getElementById('editing-dessert-index').value !== '-1') {
+          document.getElementById('keep-existing-image').checked = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
                         
                         <div class="flex justify-end space-x-4 mt-6">
                             <button class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition" onclick="cancelDessertForm()">
