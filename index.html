@@ -18,8 +18,29 @@ const firebaseConfig = {
   messagingSenderId: "475305996603",
   appId: "1:475305996603:web:853145a273d57f7d39471e"
 };
-  firebase.initializeApp(firebaseConfig);
-const app = initializeApp(firebaseConfig);
+  const app = firebase.initializeApp(firebaseConfig);
+  const storage = firebase.storage();
+
+  async function uploadImageOnly() {
+    const file = document.getElementById("dessertImage").files[0];
+
+    if (!file) {
+      alert("Please choose an image.");
+      return;
+    }
+
+    const storageRef = storage.ref().child('desserts/' + Date.now() + '-' + file.name);
+
+    try {
+      const snapshot = await storageRef.put(file);
+      const downloadURL = await snapshot.ref.getDownloadURL();
+      alert("Image uploaded! ✅\nURL copied to clipboard.");
+      navigator.clipboard.writeText(downloadURL);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      alert("Error uploading image.");
+    }
+  }
 </script>
 
 
