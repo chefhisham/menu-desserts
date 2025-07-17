@@ -703,7 +703,7 @@ const firebaseConfig = {
                             </div>
                         </div>
                         
-                       <div class="form-group">
+                      <div class="form-group">
   <label class="form-label">Dessert Image</label>
 
   <!-- Image Preview Area -->
@@ -720,16 +720,32 @@ const firebaseConfig = {
     <label for="keep-existing-image">Keep existing image</label>
   </div>
 
-  <!-- Input for image URL (optional/paste only) -->
-  <input type="text" id="dessert-image-url" class="form-control mt-2" placeholder="Image URL (optional)" readonly>
-
-  <!-- ADDED: File input for uploading from device -->
+  <!-- File input for uploading from device -->
   <input type="file" id="dessert-image-upload" accept="image/*" class="form-control mt-2">
   
   <input type="hidden" id="dessert-image-data">
   <input type="hidden" id="editing-dessert-index" value="-1">
 </div>
 
+<script>
+  document.getElementById('dessert-image-upload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageUrl = e.target.result;
+        document.getElementById('dessert-image-data').value = imageUrl;
+        document.getElementById('image-preview').innerHTML = `<img src="${imageUrl}" alt="Dessert Image" style="max-width: 100%; border-radius: 8px;">`;
+
+        // If editing, uncheck 'keep existing image'
+        if (document.getElementById('editing-dessert-index').value !== '-1') {
+          document.getElementById('keep-existing-image').checked = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
 <script>
   document.getElementById('dessert-image-upload').addEventListener('change', function(event) {
     const file = event.target.files[0];
