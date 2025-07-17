@@ -18,9 +18,38 @@ const firebaseConfig = {
   messagingSenderId: "475305996603",
   appId: "1:475305996603:web:853145a273d57f7d39471e"
 };
+ 
   const app = firebase.initializeApp(firebaseConfig);
   const storage = firebase.storage();
 
+  async function uploadImageOnly() {
+    const fileInput = document.getElementById("dessert-image-file");
+    const file = fileInput.files[0];
+
+    if (!file) {
+      alert("Please select an image.");
+      return;
+    }
+
+    try {
+      const fileName = 'desserts/' + Date.now() + '-' + file.name;
+      const storageRef = storage.ref(fileName);
+      const snapshot = await storageRef.put(file);
+      const downloadURL = await snapshot.ref.getDownloadURL();
+
+      // Fill the URL input automatically
+      document.getElementById("dessert-image-url").value = downloadURL;
+
+      // Update the image preview
+      const preview = document.getElementById("image-preview");
+      preview.innerHTML = `<img src="${downloadURL}" alt="Preview" style="width: 100%; border-radius: 8px;">`;
+
+      alert("✅ Image uploaded!");
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("❌ Failed to upload image.");
+    }
+  }
 </script>
 
 
@@ -689,7 +718,10 @@ const firebaseConfig = {
                             </div>
                             
                             <div class="mt-4">
-                              <input type="text" id="dessert-image-url" class="form-control" placeholder="Paste image URL (from Imgur, etc)">
+                              <input type="file" id="dessert-image-file" class="form-control" accept="image/*">
+<button type="button" onclick="uploadImageOnly()" class="btn btn-primary mt-2">Upload Image</button>
+<input type="text" id="dessert-image-url" class="form-control mt-2" placeholder="Image URL (auto-filled after upload)" readonly>
+
                             </div>
                             
                             <input type="hidden" id="dessert-image-data">
