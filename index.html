@@ -1017,19 +1017,19 @@ const firebaseConfig = {
             }
         }
         
-        function saveDessert() {
+      function saveDessert() {
     const name = document.getElementById('dessert-name').value;
     const category = document.getElementById('dessert-category').value;
     const description = document.getElementById('dessert-description').value;
-    const imageUrl = document.getElementById('dessert-image-url').value;
+    const imageData = document.getElementById('dessert-image-data').value;  // <-- Use base64 hidden input
 
     const selectedAllergens = [];
     document.querySelectorAll('.allergen-tag.selected').forEach(tag => {
         selectedAllergens.push(tag.dataset.allergen);
     });
 
-    if (!name || !description || !imageUrl) {
-        showToast('Please fill in all required fields', 'error');
+    if (!name || !description || !imageData) {  // <-- Check base64 data
+        showToast('Please fill in all required fields including image', 'error');
         return;
     }
 
@@ -1037,7 +1037,7 @@ const firebaseConfig = {
         name,
         category,
         description,
-        image: imageUrl,
+        image: imageData,  // <-- Use base64 image data here
         allergens: selectedAllergens
     };
 
