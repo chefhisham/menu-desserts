@@ -5,54 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBOyKb7HIb5FSl2RY0uWQz2jNQ5PUCJOe8",
-  authDomain: "menu-desserts.firebaseapp.com",
-  projectId: "menu-desserts",
-  storageBucket: "menu-desserts.firebasestorage.app",
-  messagingSenderId: "475305996603",
-  appId: "1:475305996603:web:853145a273d57f7d39471e"
-};
- 
-  const app = firebase.initializeApp(firebaseConfig);
-  const storage = firebase.storage();
-
-  async function uploadImageOnly() {
-    const fileInput = document.getElementById("dessert-image-file");
-    const file = fileInput.files[0];
-
-    if (!file) {
-      alert("Please select an image.");
-      return;
-    }
-
-    try {
-      const fileName = 'desserts/' + Date.now() + '-' + file.name;
-      const storageRef = storage.ref(fileName);
-      const snapshot = await storageRef.put(file);
-      const downloadURL = await snapshot.ref.getDownloadURL();
-
-      // Fill the URL input automatically
-      document.getElementById("dessert-image-url").value = downloadURL;
-
-      // Update the image preview
-      const preview = document.getElementById("image-preview");
-      preview.innerHTML = `<img src="${downloadURL}" alt="Preview" style="width: 100%; border-radius: 8px;">`;
-
-      alert("✅ Image uploaded!");
-    } catch (error) {
-      console.error("Upload error:", error);
-      alert("❌ Failed to upload image.");
-    }
-  }
-</script>
-
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -394,6 +346,10 @@ const firebaseConfig = {
             color: #92400e;
         }
     </style>
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+  <script>
+    UPLOADCARE_PUBLIC_KEY = '21b21c551234366fe3cb';
+  </script>
 </head>
 <body>
     <div class="menu-container p-8 my-10 rounded-lg min-h-[80vh]">
@@ -703,70 +659,27 @@ const firebaseConfig = {
                             </div>
                         </div>
                         
-                      <div class="form-group">
-  <label class="form-label">Dessert Image</label>
-
-  <!-- Image Preview Area -->
-  <div class="image-preview" id="image-preview">
-    <div class="image-preview-placeholder">
-      <i class="fas fa-image fa-3x mb-2"></i>
-      <p>Upload an image from your gallery</p>
-    </div>
-  </div>
-
-  <!-- Keep existing image checkbox (for editing) -->
-  <div id="keep-image-option" class="keep-image-checkbox hidden">
-    <input type="checkbox" id="keep-existing-image" checked>
-    <label for="keep-existing-image">Keep existing image</label>
-  </div>
-
-  <!-- File input for uploading from device -->
-  <input type="file" id="dessert-image-upload" accept="image/*" class="form-control mt-2">
-  
-  <input type="hidden" id="dessert-image-data">
-  <input type="hidden" id="editing-dessert-index" value="-1">
-</div>
-
-<script>
-  document.getElementById('dessert-image-upload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const imageUrl = e.target.result;
-        document.getElementById('dessert-image-data').value = imageUrl;
-        document.getElementById('image-preview').innerHTML = `<img src="${imageUrl}" alt="Dessert Image" style="max-width: 100%; border-radius: 8px;">`;
-
-        // If editing, uncheck 'keep existing image'
-        if (document.getElementById('editing-dessert-index').value !== '-1') {
-          document.getElementById('keep-existing-image').checked = false;
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-</script>
-<script>
-  document.getElementById('dessert-image-upload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const imageUrl = e.target.result;
-        document.getElementById('dessert-image-url').value = imageUrl;
-        document.getElementById('dessert-image-data').value = imageUrl;
-        document.getElementById('image-preview').innerHTML = `<img src="${imageUrl}" alt="Dessert Image" style="max-width: 100%;">`;
-
-        // If editing, uncheck 'keep existing image'
-        if (document.getElementById('editing-dessert-index').value !== '-1') {
-          document.getElementById('keep-existing-image').checked = false;
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-</script>
-
+                        <div class="form-group">
+                            <label class="form-label">Dessert Image</label>
+                            <div class="image-preview" id="image-preview">
+                                <div class="image-preview-placeholder">
+                                    <i class="fas fa-image fa-3x mb-2"></i>
+                                    <p>Upload an image from your gallery</p>
+                                </div>
+                            </div>
+                            
+                            <div id="keep-image-option" class="keep-image-checkbox hidden">
+                                <input type="checkbox" id="keep-existing-image" checked>
+                                <label for="keep-existing-image">Keep existing image</label>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <input type="file" id="dessert-image-upload" class="form-control" accept="image/*" onchange="handleImageUpload(event)">
+                            </div>
+                            
+                            <input type="hidden" id="dessert-image-data">
+                            <input type="hidden" id="editing-dessert-index" value="-1">
+                        </div>
                         
                         <div class="flex justify-end space-x-4 mt-6">
                             <button class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition" onclick="cancelDessertForm()">
@@ -873,7 +786,10 @@ const firebaseConfig = {
         
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-               loadDessertsFromFirebase();
+            loadDessertsFromStorage();
+            updateDessertList();
+            renderDesserts();
+            
             // Add event listener for keep image checkbox
             document.getElementById('keep-existing-image').addEventListener('change', function() {
                 const imageUpload = document.getElementById('dessert-image-upload');
@@ -887,15 +803,28 @@ const firebaseConfig = {
         });
         
         // Local Storage Functions
-       function loadDessertsFromFirebase() {
-    database.ref('desserts').on('value', (snapshot) => {
-        const data = snapshot.val();
-        desserts = data ? Object.values(data) : [];
-        updateDessertList();
-        renderDesserts();
-    });
-}
-
+        function saveDessertsToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(desserts));
+                return true;
+            } catch (error) {
+                console.error('Error saving to local storage:', error);
+                return false;
+            }
+        }
+        
+        function loadDessertsFromStorage() {
+            try {
+                const storedData = localStorage.getItem(STORAGE_KEY);
+                if (storedData) {
+                    desserts = JSON.parse(storedData);
+                }
+            } catch (error) {
+                console.error('Error loading from local storage:', error);
+                showToast('Could not load saved desserts', 'error');
+            }
+        }
+        
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
@@ -1017,39 +946,96 @@ const firebaseConfig = {
             }
         }
         
-      function saveDessert() {
-    const name = document.getElementById('dessert-name').value;
-    const category = document.getElementById('dessert-category').value;
-    const description = document.getElementById('dessert-description').value;
-    const imageData = document.getElementById('dessert-image-data').value;  // <-- Use base64 hidden input
-
-    const selectedAllergens = [];
-    document.querySelectorAll('.allergen-tag.selected').forEach(tag => {
-        selectedAllergens.push(tag.dataset.allergen);
-    });
-
-    if (!name || !description || !imageData) {  // <-- Check base64 data
-        showToast('Please fill in all required fields including image', 'error');
-        return;
-    }
-
-    const dessert = {
-        name,
-        category,
-        description,
-        image: imageData,  // <-- Use base64 image data here
-        allergens: selectedAllergens
-    };
-
-    function loadDessertsFromFirebase() {
-  database.ref('desserts').on('value', (snapshot) => {
-    const data = snapshot.val();
-    desserts = data ? Object.values(data) : [];
-    updateDessertList();
-    renderDesserts();
-  });
-}
-} 
+        function saveDessert() {
+            // Get form values
+            const name = document.getElementById('dessert-name').value;
+            const category = document.getElementById('dessert-category').value;
+            const description = document.getElementById('dessert-description').value;
+            const imageData = document.getElementById('dessert-image-data').value;
+            const editingIndex = parseInt(document.getElementById('editing-dessert-index').value);
+            
+            // Get selected allergens
+            const selectedAllergens = [];
+            document.querySelectorAll('.allergen-tag.selected').forEach(tag => {
+                selectedAllergens.push(tag.dataset.allergen);
+            });
+            
+            // Validate form
+            if (!name || !description) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Check if we're editing or adding new
+            if (editingIndex >= 0) {
+                // We're editing an existing dessert
+                const keepExistingImage = document.getElementById('keep-existing-image').checked;
+                
+                // If keeping existing image and no new image uploaded
+                if (keepExistingImage) {
+                    // Update the dessert but keep the existing image
+                    desserts[editingIndex].name = name;
+                    desserts[editingIndex].category = category;
+                    desserts[editingIndex].description = description;
+                    desserts[editingIndex].allergens = selectedAllergens;
+                } else {
+                    // Require a new image if not keeping the existing one
+                    if (!imageData) {
+                        showToast('Please upload an image', 'error');
+                        return;
+                    }
+                    
+                    // Update the dessert including the new image
+                    desserts[editingIndex].name = name;
+                    desserts[editingIndex].category = category;
+                    desserts[editingIndex].description = description;
+                    desserts[editingIndex].allergens = selectedAllergens;
+                    desserts[editingIndex].image = imageData;
+                }
+                
+                // Save to local storage
+                if (saveDessertsToStorage()) {
+                    showToast('Dessert updated successfully!');
+                } else {
+                    showToast('Could not save changes. Storage might be full.', 'error');
+                }
+            } else {
+                // We're adding a new dessert
+                if (!imageData) {
+                    showToast('Please upload an image', 'error');
+                    return;
+                }
+                
+                // Create a new dessert object
+                const newDessert = {
+                    name,
+                    category,
+                    description,
+                    allergens: selectedAllergens,
+                    image: imageData
+                };
+                
+                // Add to our desserts array
+                desserts.push(newDessert);
+                
+                // Save to local storage
+                if (saveDessertsToStorage()) {
+                    showToast('Dessert saved successfully!');
+                } else {
+                    showToast('Could not save dessert. Storage might be full.', 'error');
+                    // Remove the dessert if we couldn't save it
+                    desserts.pop();
+                }
+            }
+            
+            // Update the UI
+            updateDessertList();
+            renderDesserts();
+            
+            // Hide the form
+            cancelDessertForm();
+        }
+        
         function editDessert(index) {
             const dessert = desserts[index];
             
@@ -1262,6 +1248,102 @@ const firebaseConfig = {
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9601529946440e3c',t:'MTc1MjY2NzA1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9601529946440e3c',t:'MTc1MjY2NzA1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+  <script>
+    let desserts = JSON.parse(localStorage.getItem('desserts') || '[]');
 
+    async function uploadImageUsingUploadcare() {
+      return new Promise((resolve) => {
+        const widget = uploadcare.Widget('#dessertUploader');
+        widget.openDialog(null, {
+          imagesOnly: true,
+          crop: 'free'
+        }).done(function(fileInfo) {
+          document.getElementById("preview").src = fileInfo.cdnUrl;
+          resolve(fileInfo.cdnUrl);
+        });
+      });
+    }
+
+    async function saveDessert() {
+      const name = document.getElementById('dessert-name').value.trim();
+      const category = document.getElementById('dessert-category').value;
+      const description = document.getElementById('dessert-description').value.trim();
+      const editingIndex = parseInt(document.getElementById('editing-dessert-index').value);
+      const isEditing = editingIndex >= 0;
+
+      if (!name || !description) {
+        alert('Name and description are required');
+        return;
+      }
+
+      let imageUrl = '';
+      if (isEditing && document.getElementById('keep-existing-image').checked) {
+        imageUrl = desserts[editingIndex].image;
+      } else {
+        imageUrl = await uploadImageUsingUploadcare();
+      }
+
+      const allergens = Array.from(document.querySelectorAll('.allergen-tag.selected'))
+        .map(tag => tag.dataset.allergen);
+
+      const dessert = { name, category, description, allergens, image: imageUrl };
+
+      if (isEditing) {
+        desserts[editingIndex] = dessert;
+      } else {
+        desserts.push(dessert);
+      }
+
+      updateDessertList();
+      localStorage.setItem('desserts', JSON.stringify(desserts));
+      renderDesserts();
+      cancelDessertForm();
+    }
+
+    function updateDessertList() {
+      document.getElementById('dessert-list').innerHTML = '';
+      desserts.forEach((dessert) => {
+        const div = document.createElement('div');
+        div.className = 'bg-white rounded shadow p-4 flex gap-4 mb-4';
+        div.innerHTML = `
+          <img src="${dessert.image}" class="w-24 h-24 object-cover rounded" />
+          <div>
+            <h3 class="text-lg font-bold">${dessert.name}</h3>
+            <p class="text-sm text-gray-600">${dessert.description}</p>
+            <p class="text-xs mt-1"><strong>Category:</strong> ${dessert.category}</p>
+            <p class="text-xs"><strong>Allergens:</strong> ${dessert.allergens.join(', ')}</p>
+          </div>
+        `;
+        document.getElementById('dessert-list').appendChild(div);
+      });
+    }
+
+    function cancelDessertForm() {
+      document.getElementById('dessert-name').value = '';
+      document.getElementById('dessert-category').value = 'cake';
+      document.getElementById('dessert-description').value = '';
+      document.getElementById('editing-dessert-index').value = -1;
+      document.getElementById('preview').src = '';
+      document.querySelectorAll('.allergen-tag').forEach(tag => tag.classList.remove('selected'));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      renderDesserts();
+      document.getElementById('keep-existing-image')?.addEventListener('change', function () {
+        const imageUpload = document.getElementById('dessertUploader');
+        imageUpload.disabled = this.checked;
+        imageUpload.classList.toggle('opacity-50', this.checked);
+      });
+
+      document.querySelectorAll('.allergen-tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+          tag.classList.toggle('selected');
+          tag.classList.toggle('bg-gray-200');
+          tag.classList.toggle('bg-blue-300');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
